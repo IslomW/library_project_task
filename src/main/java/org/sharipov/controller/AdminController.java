@@ -5,23 +5,30 @@ import org.sharipov.container.ComponentContainer;
 import org.sharipov.util.ScannerUtil;
 
 public class AdminController {
+
+    private BookController bookController;
+    private CategoryController categoryController;
+    private StudentProfileController studentProfileController;
+    private ProfileController profileController;
+    private ScannerUtil scannerUtil;
+
     public void start() {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.bookController.start();
+                    bookController.start();
                     break;
                 case 2:
-                    ComponentContainer.categoryController.start();
+                    categoryController.start();
                     break;
                 case 3:
-                    ComponentContainer.studentProfileController.start();
+                    studentProfileController.start();
                     break;
                 case 4:
-                    ComponentContainer.profileController.start();
+                   profileController.start();
                     break;
                 case 0:
                     loop = false;
@@ -42,5 +49,25 @@ public class AdminController {
         System.out.println("3. Student");
         System.out.println("4. Profile");
         System.out.println("0. Exit");
+    }
+
+    public void setBookController(BookController bookController) {
+        this.bookController = bookController;
+    }
+
+    public void setCategoryController(CategoryController categoryController) {
+        this.categoryController = categoryController;
+    }
+
+    public void setStudentProfileController(StudentProfileController studentProfileController) {
+        this.studentProfileController = studentProfileController;
+    }
+
+    public void setProfileController(ProfileController profileController) {
+        this.profileController = profileController;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
     }
 }

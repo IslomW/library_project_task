@@ -1,20 +1,27 @@
 package org.sharipov.controller;
 
 
-
-import org.sharipov.container.ComponentContainer;
 import org.sharipov.dto.Book;
+import org.sharipov.service.BookService;
+import org.sharipov.service.ScannerService;
+import org.sharipov.service.StudentBookService;
 import org.sharipov.util.ScannerUtil;
 
 import java.time.LocalDate;
 
+
 public class BookController {
+
+    private StudentBookService studentBookService;
+    private BookService bookService;
+    private ScannerService scannerService;
+    private ScannerUtil scannerUtil;
 
     public void start() {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
                     list();
@@ -29,13 +36,13 @@ public class BookController {
                     delete();
                     break;
                 case 5:
-                    ComponentContainer.studentBookService.booksOnHand();
+                    studentBookService.booksOnHand();
                     break;
                 case 6:
                     bookHistory();
                     break;
                 case 7:
-                    ComponentContainer.studentBookService.bestBooks();
+                    studentBookService.bestBooks();
                     break;
                 case 0:
                     loop = false;
@@ -62,19 +69,19 @@ public class BookController {
 
     public void add() {
         System.out.print("Enter title: ");
-        String title = ComponentContainer.scannerText.next();
+        String title = scannerService.getScannerText().next();
 
         System.out.print("Enter author: ");
-        String author = ComponentContainer.scannerText.next();
+        String author = scannerService.getScannerText().next();
 
         System.out.print("Enter category id: ");
-        Integer categoryId = ComponentContainer.scannerNumber.nextInt();
+        Integer categoryId = scannerService.getScannerNumber().nextInt();
 
         System.out.print("Enter available day: ");
-        Integer availableDay = ComponentContainer.scannerNumber.nextInt();
+        Integer availableDay = scannerService.getScannerNumber().nextInt();
 
         System.out.print("Enter publishDate (yyyy-MM-dd): "); // 2023-07-15
-        String publishDate = ComponentContainer.scannerText.next();
+        String publishDate = scannerService.getScannerText().next();
 
         Book book = new Book();
         book.setTitle(title);
@@ -83,29 +90,45 @@ public class BookController {
         book.setPublishDate(LocalDate.parse(publishDate));
         book.setAvailableDay(availableDay);
 
-        ComponentContainer.bookService.add(book);
+        bookService.add(book);
     }
 
     public void list() {
         System.out.println("--- Book list ---");
-        ComponentContainer.bookService.all();
+        bookService.all();
     }
 
     public void search() {
         System.out.print("Enter query:");
-        String query = ComponentContainer.scannerText.next();
-        ComponentContainer.bookService.search(query);
+        String query = scannerService.getScannerText().next();
+        bookService.search(query);
     }
 
     public void delete() {
         System.out.print("Enter id:");
-        Integer bookId = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.bookService.delete(bookId);
+        Integer bookId = scannerService.getScannerNumber().nextInt();
+        bookService.delete(bookId);
     }
 
     private void bookHistory() {
         System.out.print("Enter book Id:");
-        Integer bookId = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.studentBookService.bookHistory(bookId);
+        Integer bookId = scannerService.getScannerNumber().nextInt();
+        studentBookService.bookHistory(bookId);
+    }
+
+    public void setStudentBookService(StudentBookService studentBookService) {
+        this.studentBookService = studentBookService;
+    }
+
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    public void setScannerService(ScannerService scannerService) {
+        this.scannerService = scannerService;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
     }
 }

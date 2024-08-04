@@ -3,11 +3,14 @@ package org.sharipov.service;
 
 import org.sharipov.container.ComponentContainer;
 import org.sharipov.dto.Category;
+import org.sharipov.repository.CategoryRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class CategoryService {
+
+    private CategoryRepository categoryRepository;
 
     public void create(Category category) {
         CategoryService categoryService = new CategoryService();
@@ -16,7 +19,7 @@ public class CategoryService {
             System.out.println("Mazgi Category nomida hatolik bor.");
             return;
         }
-        Category exists = ComponentContainer.categoryRepository.getByName(category.getName());
+        Category exists = categoryRepository.getByName(category.getName());
         if (exists != null) {
             System.out.println("category name already exists");
             return;
@@ -24,7 +27,7 @@ public class CategoryService {
 
         category.setCreatedDate(LocalDateTime.now());
         category.setVisible(true);
-        int effectedRows = ComponentContainer.categoryRepository.save(category);
+        int effectedRows = categoryRepository.save(category);
         if (effectedRows != 0) {
             System.out.println("Category is created");
         }
@@ -38,18 +41,22 @@ public class CategoryService {
     }
 
     public void list() {
-        List<Category> categoryList = ComponentContainer.categoryRepository.getAll();
+        List<Category> categoryList = categoryRepository.getAll();
         for (Category category : categoryList) {
             System.out.println(category.getId() + " " + category.getName() + " " + category.getCreatedDate());
         }
     }
 
     public void delete(Integer id) {
-        int effectedRows = ComponentContainer.categoryRepository.deleteById(id);
+        int effectedRows = categoryRepository.deleteById(id);
         if (effectedRows != 0) {
             System.out.println("Category deleted");
         } else {
             System.out.println("Category not deleted");
         }
+    }
+
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 }

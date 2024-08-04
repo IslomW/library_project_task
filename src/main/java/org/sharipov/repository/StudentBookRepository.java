@@ -11,13 +11,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
 public class StudentBookRepository {
+
+    private BookRepository bookRepository;
+    private ProfileRepository profileRepository;
 
     private Integer serialId = 1;
 
@@ -51,7 +53,7 @@ public class StudentBookRepository {
                 studentBook.setId(Integer.valueOf(str[0]));
                 studentBook.setCreatedDate(LocalDateTime.parse(str[3]));
                 if (str[6] != null) studentBook.setReturnedDate(LocalDateTime.parse(str[6]));
-                studentBook.setBook(ComponentContainer.bookRepository.get(Integer.valueOf(str[2])));
+                studentBook.setBook(bookRepository.get(Integer.valueOf(str[2])));
                 return studentBook;
             }).sorted().toList();
         } catch (IOException e) {
@@ -160,8 +162,8 @@ public class StudentBookRepository {
                 StudentBook studentBook = new StudentBook();
                 studentBook.setCreatedDate(LocalDateTime.parse(str[3]));
                 studentBook.setDeadlineDate(LocalDate.parse(str[4]));
-                studentBook.setBook(ComponentContainer.bookRepository.get(Integer.valueOf(str[2])));
-                studentBook.setStudent(ComponentContainer.profileRepository.get(Integer.valueOf(str[1])));
+                studentBook.setBook(bookRepository.get(Integer.valueOf(str[2])));
+                studentBook.setStudent(profileRepository.get(Integer.valueOf(str[1])));
                 return studentBook;
             }).sorted().toList();
         } catch (IOException e) {
@@ -181,7 +183,7 @@ public class StudentBookRepository {
                 StudentBook studentBook = new StudentBook();
                 studentBook.setCreatedDate(LocalDateTime.parse(str[3]));
                 if (str[6] != null) studentBook.setReturnedDate(LocalDateTime.parse(str[6]));
-                studentBook.setStudent(ComponentContainer.profileRepository.get(Integer.valueOf(str[1])));
+                studentBook.setStudent(profileRepository.get(Integer.valueOf(str[1])));
                 return studentBook;
             }).sorted().toList();
         } catch (IOException e) {
@@ -196,7 +198,7 @@ public class StudentBookRepository {
             bookList = stream.map(line -> {
                 String[] str = line.split("#");
                 StudentBook studentBook = new StudentBook();
-                studentBook.setBook(ComponentContainer.bookRepository.get(Integer.valueOf(str[2])));
+                studentBook.setBook(bookRepository.get(Integer.valueOf(str[2])));
                 return studentBook;
             }).toList();
         } catch (IOException e) {
@@ -236,4 +238,11 @@ public class StudentBookRepository {
         }
     }
 
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public void setProfileRepository(ProfileRepository profileRepository) {
+        this.profileRepository = profileRepository;
+    }
 }

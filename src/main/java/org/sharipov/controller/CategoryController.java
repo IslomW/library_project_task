@@ -3,18 +3,24 @@ package org.sharipov.controller;
 
 import org.sharipov.container.ComponentContainer;
 import org.sharipov.dto.Category;
+import org.sharipov.service.CategoryService;
+import org.sharipov.service.ScannerService;
 import org.sharipov.util.ScannerUtil;
 
 public class CategoryController {
+
+    private CategoryService categoryService;
+    private ScannerService scannerService;
+    private ScannerUtil scannerUtil;
 
     public void start() {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.categoryService.list();
+                    categoryService.list();
                     break;
                 case 2:
                     deleteCategory();
@@ -43,18 +49,30 @@ public class CategoryController {
 
     public void addCategory() {
         System.out.print("Enter name: ");
-        String name = ComponentContainer.scannerText.next();
+        String name = scannerService.getScannerText().next();
         //
         Category category = new Category();
         category.setName(name);
 
-        ComponentContainer.categoryService.create(category);
+       categoryService.create(category);
     }
 
     public void deleteCategory() {
         System.out.print("Enter id: ");
-        Integer id = ComponentContainer.scannerNumber.nextInt();
+        Integer id = scannerService.getScannerNumber().nextInt();
 
-        ComponentContainer.categoryService.delete(id);
+        categoryService.delete(id);
+    }
+
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    public void setScannerService(ScannerService scannerService) {
+        this.scannerService = scannerService;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
     }
 }

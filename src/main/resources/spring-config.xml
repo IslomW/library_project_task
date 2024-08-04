@@ -4,6 +4,110 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="mainController" class="org.sharipov.controller.MainController">
-
+        <property name="initService" ref="initService"/>
+        <property name="bookService" ref="bookService"/>
+        <property name="authService" ref="authService"/>
+        <property name="categoryService" ref="categoryService"/>
+        <property name="scannerService" ref="scannerService"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
     </bean>
+
+    <!--    Controllers-->
+    <bean id="adminController" class="org.sharipov.controller.AdminController">
+        <property name="studentProfileController" ref="studentProfileController"/>
+        <property name="profileController" ref="profileController"/>
+        <property name="bookController" ref="bookController"/>
+        <property name="categoryController" ref="categoryController"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <bean id="bookController" class="org.sharipov.controller.BookController">
+        <property name="studentBookService" ref="studentBookService"/>
+        <property name="scannerService" ref="scannerService"/>
+        <property name="bookService" ref="bookService"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <bean id="categoryController" class="org.sharipov.controller.CategoryController">
+        <property name="scannerService" ref="scannerService"/>
+        <property name="categoryService" ref="categoryService"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <bean id="profileController" class="org.sharipov.controller.ProfileController">
+        <property name="scannerService" ref="scannerService"/>
+        <property name="profileService" ref="profileService"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <bean id="staffController" class="org.sharipov.controller.StaffController">
+        <property name="bookController" ref="bookController"/>
+        <property name="studentProfileController" ref="studentProfileController"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <bean id="studentController" class="org.sharipov.controller.StudentController">
+        <property name="scannerService" ref="scannerService"/>
+        <property name="bookService" ref="bookService"/>
+        <property name="studentBookService" ref="studentBookService"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <bean id="studentProfileController" class="org.sharipov.controller.StudentProfileController">
+        <property name="scannerService" ref="scannerService"/>
+        <property name="profileService" ref="profileService"/>
+        <property name="scannerUtil" ref="scannerUtil"/>
+    </bean>
+
+    <!--    Repositories-->
+    <bean id="bookRepository" class="org.sharipov.repository.BookRepository">
+        <property name="categoryRepository" ref="categoryRepository"/>
+    </bean>
+
+    <bean id="studentBookRepository" class="org.sharipov.repository.StudentBookRepository">
+        <property name="bookRepository" ref="bookRepository"/>
+        <property name="profileRepository" ref="profileRepository"/>
+    </bean>
+
+    <bean id="categoryRepository" class="org.sharipov.repository.CategoryRepository"/>
+    <bean id="profileRepository" class="org.sharipov.repository.ProfileRepository"/>
+
+
+    <!--    Services-->
+
+    <bean id="bookService" class="org.sharipov.service.BookService">
+        <property name="bookRepository" ref="bookRepository"/>
+        <property name="categoryRepository" ref="categoryRepository"/>
+        <property name="categoryService" ref="categoryService"/>
+    </bean>
+
+    <bean id="categoryService" class="org.sharipov.service.CategoryService">
+        <property name="categoryRepository" ref="categoryRepository"/>
+    </bean>
+
+    <bean id="profileService" class="org.sharipov.service.ProfileService">
+        <property name="categoryService" ref="categoryService"/>
+        <property name="profileRepository" ref="profileRepository"/>
+    </bean>
+
+    <bean id="studentBookService" class="org.sharipov.service.StudentBookService">
+        <property name="bookRepository" ref="bookRepository"/>
+        <property name="studentBookRepository" ref="studentBookRepository"/>
+    </bean>
+
+    <bean id="authService" class="org.sharipov.service.AuthService">
+        <property name="profileRepository" ref="profileRepository"/>
+        <property name="staffController" ref="staffController"/>
+        <property name="adminController" ref="adminController"/>
+        <property name="studentController" ref="studentController"/>
+    </bean>
+
+    <bean id="initService" class="org.sharipov.service.InitService"/>
+    <bean id="scannerService" class="org.sharipov.service.ScannerService"/>
+    
+    <bean id="scannerUtil" class="org.sharipov.util.ScannerUtil">
+        <property name="scannerService" ref="scannerService"/>
+    </bean>
+
+
 </beans>

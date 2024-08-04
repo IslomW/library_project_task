@@ -4,17 +4,25 @@ package org.sharipov.controller;
 import org.sharipov.container.ComponentContainer;
 import org.sharipov.enums.ProfileRole;
 import org.sharipov.enums.ProfileStatus;
+import org.sharipov.service.ProfileService;
+import org.sharipov.service.ScannerService;
 import org.sharipov.util.ScannerUtil;
 
+import java.util.Scanner;
+
 public class StudentProfileController {
+
+    private ScannerService scannerService;
+    private ProfileService profileService;
+    private ScannerUtil scannerUtil;
     public void start() {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.profileService.studentList();
+                    profileService.studentList();
                     break;
                 case 2:
                     search();
@@ -47,20 +55,31 @@ public class StudentProfileController {
 
     public void search() {
         System.out.print("Enter query: ");
-        String query = ComponentContainer.scannerText.next();
-        ComponentContainer.profileService.search(query, ProfileRole.STUDENT);
+        String query = scannerService.getScannerText().next();
+        profileService.search(query, ProfileRole.STUDENT);
     }
 
     public void blockStudent() {
         System.out.print("Enter id: ");
-        Integer id = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.profileService.changeStudentStatus(id, ProfileStatus.BLOCK);
+        Integer id = scannerService.getScannerNumber().nextInt();
+        profileService.changeStudentStatus(id, ProfileStatus.BLOCK);
     }
 
     public void activeStudent() {
         System.out.print("Enter id: ");
-        Integer id = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.profileService.changeStudentStatus(id, ProfileStatus.ACTIVE);
+        Integer id = scannerService.getScannerNumber().nextInt();
+        profileService.changeStudentStatus(id, ProfileStatus.ACTIVE);
     }
 
+    public void setScannerService(ScannerService scannerService) {
+        this.scannerService = scannerService;
+    }
+
+    public void setProfileService(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
+    }
 }

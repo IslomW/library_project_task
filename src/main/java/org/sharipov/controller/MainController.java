@@ -3,11 +3,40 @@ package org.sharipov.controller;
 
 import org.sharipov.container.ComponentContainer;
 import org.sharipov.dto.Profile;
-import org.sharipov.service.InitService;
+import org.sharipov.service.*;
 import org.sharipov.util.ScannerUtil;
 
 public class MainController {
     private InitService initService;
+    private BookService bookService;
+    private AuthService authService;
+    private CategoryService categoryService;
+    private ScannerService scannerService;
+    private ScannerUtil scannerUtil;
+
+    public void setInitService(InitService initService) {
+        this.initService = initService;
+    }
+
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    public void setAuthService(AuthService authService) {
+        this.authService = authService;
+    }
+
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    public void setScannerService(ScannerService scannerService) {
+        this.scannerService = scannerService;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
+    }
 
     // lesson finished
     public void start() {
@@ -20,10 +49,10 @@ public class MainController {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.bookService.all();
+                    bookService.all();//
                     break;
                 case 2:
                     search();
@@ -60,29 +89,29 @@ public class MainController {
 
     public void login() {
         System.out.print("Enter login: ");
-        String login = ComponentContainer.scannerText.next();
+        String login = scannerService.getScannerText().next();//
 
         System.out.print("scannerText password: ");
-        String password = ComponentContainer.scannerText.next();
+        String password = scannerService.getScannerText().next();//
         //
-        ComponentContainer.authService.login(login, password);
+        authService.login(login, password); //
     }
 
     public void registration() {
         System.out.print("Enter name: ");
-        String name = ComponentContainer.scannerText.next();
+        String name = scannerService.getScannerText().next();
 
         System.out.print("Enter surname: ");
-        String surname = ComponentContainer.scannerText.next();
+        String surname = scannerService.getScannerText().next();
 
         System.out.print("Enter phone: ");
-        String phone = ComponentContainer.scannerText.next();
+        String phone = scannerService.getScannerText().next();
 
         System.out.print("Enter login: ");
-        String login = ComponentContainer.scannerText.next();
+        String login = scannerService.getScannerText().next();
 
         System.out.print("Enter password: ");
-        String password = ComponentContainer.scannerText.next();
+        String password = scannerService.getScannerText().next();
 
         Profile profile = new Profile();
         profile.setName(name.trim());
@@ -92,20 +121,20 @@ public class MainController {
         profile.setLogin(login.trim()); // valish
         profile.setPassword(password.trim()); // 222
 
-        ComponentContainer.authService.registration(profile);
+        authService.registration(profile);//
     }
 
     public void search() {
         System.out.print("Enter query:");
-        String query = ComponentContainer.scannerText.next();
-        ComponentContainer.bookService.search(query);
+        String query = scannerService.getScannerText().next();
+        bookService.search(query);//
     }
 
     public void byCategory() {
-        ComponentContainer.categoryService.list();
+       categoryService.list();//
         System.out.print("Enter category id:");
-        Integer categoryId = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.bookService.byCategoryId(categoryId);
+        Integer categoryId = scannerService.getScannerNumber().nextInt();
+        bookService.byCategoryId(categoryId);
     }
 
 

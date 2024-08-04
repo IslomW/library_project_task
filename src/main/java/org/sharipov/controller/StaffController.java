@@ -7,17 +7,20 @@ import org.sharipov.util.ScannerUtil;
 import java.util.Scanner;
 
 public class StaffController {
+    private BookController bookController;
+    private StudentProfileController studentProfileController;
+    private ScannerUtil scannerUtil;
     public void start() {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.bookController.start();
+                    bookController.start();
                     break;
                 case 2:
-                    ComponentContainer.studentProfileController.start();
+                    studentProfileController.start();
                     break;
                 case 0:
                     loop = false;
@@ -38,4 +41,15 @@ public class StaffController {
         System.out.println("0. Exit");
     }
 
+    public void setBookController(BookController bookController) {
+        this.bookController = bookController;
+    }
+
+    public void setStudentProfileController(StudentProfileController studentProfileController) {
+        this.studentProfileController = studentProfileController;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
+    }
 }

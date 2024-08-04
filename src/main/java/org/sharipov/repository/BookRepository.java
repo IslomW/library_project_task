@@ -4,7 +4,7 @@ package org.sharipov.repository;
 import org.sharipov.container.ComponentContainer;
 import org.sharipov.dto.Book;
 
-import java.awt.*;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +18,9 @@ import java.util.stream.Stream;
 
 
 public class BookRepository {
+
+    private CategoryRepository categoryRepository;
+
     private Integer bookId = 1;
 
 
@@ -128,8 +131,7 @@ public class BookRepository {
                 book.setId(Integer.valueOf(str[0]));
                 book.setTitle(str[1]);
                 book.setAuthor(str[2]);
-                book.setCategory(ComponentContainer
-                        .categoryRepository.get(Integer.valueOf(str[6])));
+                book.setCategory(categoryRepository.get(Integer.valueOf(str[6])));
                 return book;
             }).sorted().toList();
         } catch (IOException e) {
@@ -164,8 +166,7 @@ public class BookRepository {
         book.setPublishDate(LocalDate.parse(str[3]));
         book.setAvailableDay(Integer.valueOf(str[4]));
         book.setCreatedDate(LocalDateTime.parse(str[5]));
-        book.setCategory(ComponentContainer
-                .categoryRepository.get(Integer.valueOf(str[6])));
+        book.setCategory(categoryRepository.get(Integer.valueOf(str[6])));
         return book;
     }
 
@@ -182,13 +183,16 @@ public class BookRepository {
                 book.setTitle(str[1]);
                 book.setAuthor(str[2]);
                 book.setAvailableDay(Integer.valueOf(str[4]));
-                book.setCategory(ComponentContainer
-                        .categoryRepository.get(Integer.valueOf(str[6])));
+                book.setCategory(categoryRepository.get(Integer.valueOf(str[6])));
                 return book;
             }).findAny().orElse(null);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 }

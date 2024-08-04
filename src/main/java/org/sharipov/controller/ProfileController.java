@@ -3,19 +3,38 @@ package org.sharipov.controller;
 import org.sharipov.container.ComponentContainer;
 import org.sharipov.dto.Profile;
 import org.sharipov.enums.ProfileRole;
+import org.sharipov.service.ProfileService;
+import org.sharipov.service.ScannerService;
 import org.sharipov.util.ScannerUtil;
 
 ;
 
 public class ProfileController {
+
+    private ScannerService scannerService;
+    private ProfileService profileService;
+    private ScannerUtil scannerUtil;
+
+    public void setScannerService(ScannerService scannerService) {
+        this.scannerService = scannerService;
+    }
+
+    public void setProfileService(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
+    }
+
     public void start() {
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.profileService.list();
+                    profileService.list(); //
                     break;
                 case 2:
                     search();
@@ -47,22 +66,22 @@ public class ProfileController {
 
     public void addProfile() {
         System.out.print("Enter name: ");
-        String name = ComponentContainer.scannerText.next();
+        String name = scannerService.getScannerText().next();
 
         System.out.print("Enter surname: ");
-        String surname = ComponentContainer.scannerText.next();
+        String surname = scannerService.getScannerText().next();
 
         System.out.print("Enter login: ");
-        String login = ComponentContainer.scannerText.next();
+        String login = scannerService.getScannerText().next();
 
         System.out.print("Enter password: ");
-        String password = ComponentContainer.scannerText.next();
+        String password = scannerService.getScannerText().next();
 
         System.out.print("Enter phone (9989x1234567): ");
-        String phone = ComponentContainer.scannerText.next();
+        String phone = scannerService.getScannerText().next();
 
         System.out.print("Enter role (STAFF,ADMIN) : ");
-        String role = ComponentContainer.scannerText.next();
+        String role = scannerService.getScannerText().next();
         ProfileRole profileRole;
         try {
             profileRole = ProfileRole.valueOf(role);
@@ -78,19 +97,19 @@ public class ProfileController {
         profile.setPassword(password.trim()); // 222
         profile.setPhone(phone.trim());
         profile.setRole(profileRole);
-        ComponentContainer.profileService.addProfile(profile);
+        profileService.addProfile(profile);//
     }
 
     public void search() {
         System.out.print("Enter query: ");
-        String query = ComponentContainer.scannerText.next();
-        ComponentContainer.profileService.search(query, ProfileRole.ADMIN, ProfileRole.STAFF);
+        String query = scannerService.getScannerText().next();
+        profileService.search(query, ProfileRole.ADMIN, ProfileRole.STAFF);//
     }
 
     private void changeStatus() {
         System.out.print("Enter Id: ");
-        Integer id = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.profileService.changeStatus(id);
+        Integer id = scannerService.getScannerNumber().nextInt();
+        profileService.changeStatus(id);//
     }
 
 }

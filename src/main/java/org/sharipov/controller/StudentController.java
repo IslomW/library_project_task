@@ -2,20 +2,27 @@ package org.sharipov.controller;
 
 
 import org.sharipov.container.ComponentContainer;
+import org.sharipov.service.BookService;
+import org.sharipov.service.ScannerService;
+import org.sharipov.service.StudentBookService;
 import org.sharipov.util.ScannerUtil;
 
 public class StudentController {
 
+    private StudentBookService studentBookService;
+    private BookService bookService;
+    private ScannerService scannerService;
+    private ScannerUtil scannerUtil;
     public void start() {
         System.out.println("Mazgi you must return the following books:");
-        ComponentContainer.studentBookService.booksOnHand();
+        studentBookService.booksOnHand();
         boolean loop = true;
         while (loop) {
             showMenu();
-            int action = ScannerUtil.getAction();
+            int action = scannerUtil.getAction();
             switch (action) {
                 case 1:
-                    ComponentContainer.bookService.all();
+                    bookService.all();
                     break;
                 case 2:
                     search();
@@ -27,10 +34,10 @@ public class StudentController {
                     returnBook();
                     break;
                 case 5:
-                    ComponentContainer.studentBookService.booksOnHand();
+                    studentBookService.booksOnHand();
                     break;
                 case 6:
-                    ComponentContainer.studentBookService.takenBookHistory();
+                    studentBookService.takenBookHistory();
                     break;
                 case 0:
                     loop = false;
@@ -57,20 +64,35 @@ public class StudentController {
 
     public void search() {
         System.out.print("Enter query:");
-        String query = ComponentContainer.scannerText.next();
-        ComponentContainer.bookService.search(query);
+        String query = scannerService.getScannerText().next();
+        bookService.search(query);
     }
 
     public void takeBook() {
         System.out.print("Enter book Id:");
-        Integer bId = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.studentBookService.takeBook(bId);
+        Integer bId = scannerService.getScannerNumber().nextInt();
+        studentBookService.takeBook(bId);
     }
 
     private void returnBook() {
         System.out.print("Enter book Id:");
-        Integer bId = ComponentContainer.scannerNumber.nextInt();
-        ComponentContainer.studentBookService.returnBook(bId);
+        Integer bId = scannerService.getScannerNumber().nextInt();
+        studentBookService.returnBook(bId);
     }
 
+    public void setStudentBookService(StudentBookService studentBookService) {
+        this.studentBookService = studentBookService;
+    }
+
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    public void setScannerService(ScannerService scannerService) {
+        this.scannerService = scannerService;
+    }
+
+    public void setScannerUtil(ScannerUtil scannerUtil) {
+        this.scannerUtil = scannerUtil;
+    }
 }

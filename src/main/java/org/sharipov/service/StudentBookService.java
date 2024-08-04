@@ -7,21 +7,27 @@ import org.sharipov.dto.Category;
 import org.sharipov.dto.Profile;
 import org.sharipov.dto.StudentBook;
 import org.sharipov.enums.StudentBookStatus;
+import org.sharipov.repository.BookRepository;
+import org.sharipov.repository.StudentBookRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class StudentBookService {
+
+    private BookRepository bookRepository;
+    private StudentBookRepository studentBookRepository;
+    public static Profile currentProfile;
     public void takeBook(Integer bId) {
         // studentId
-        Book book = ComponentContainer.bookRepository.getById(bId);
+        Book book = bookRepository.getById(bId);
         if (book == null) {
             System.out.println("Mazgi. Book not exists");
             return;
         }
-        Integer profileId = ComponentContainer.currentProfile.getId();
-        List<StudentBook> studentBookList = ComponentContainer.studentBookRepository.studentBookOnHand(profileId, StudentBookStatus.TAKEN);
+        Integer profileId = currentProfile.getId();
+        List<StudentBook> studentBookList = studentBookRepository.studentBookOnHand(profileId, StudentBookStatus.TAKEN);
         if (studentBookList.size() >= 5) {
             System.out.println("You can take only 5 books");
             return;
@@ -34,7 +40,7 @@ public class StudentBookService {
 
         LocalDate deadlineDate = LocalDate.now().plusDays(book.getAvailableDay());
         studentBook.setDeadlineDate(deadlineDate);
-        int result = ComponentContainer.studentBookRepository.save(studentBook);
+        int result = studentBookRepository.save(studentBook);
         if (result == 1) {
             System.out.println("Book taken");
         } else {
@@ -43,7 +49,7 @@ public class StudentBookService {
     }
 
     public void booksOnHandByStudentId() {
-        List<StudentBook> studentBookList = ComponentContainer.studentBookRepository.studentBookOnHand(ComponentContainer.currentProfile.getId(), StudentBookStatus.TAKEN);
+        List<StudentBook> studentBookList = studentBookRepository.studentBookOnHand(currentProfile.getId(), StudentBookStatus.TAKEN);
         for (StudentBook st : studentBookList) {
             String title = st.getBook().getTitle();
             String author = st.getBook().getAuthor();
@@ -60,7 +66,7 @@ public class StudentBookService {
     }
 
     public void returnBook(Integer bId) {
-        Integer sId = ComponentContainer.currentProfile.getId();
+        Integer sId = currentProfile.getId();
 //        StudentBook st = ComponentContainer.studentBookRepository.getStudentBook(sId, bId);
 //        if (st == null) {
 //            System.out.println("No date");
@@ -73,7 +79,7 @@ public class StudentBookService {
 //            System.out.println("Error ...");
 //        }
 
-        int effectedRow = ComponentContainer.studentBookRepository.returnBook(sId, bId);
+        int effectedRow = studentBookRepository.returnBook(sId, bId);
         if (effectedRow != 0) {
             System.out.println("Book returned");
         } else {
@@ -82,7 +88,7 @@ public class StudentBookService {
     }
 
     public void takenBookHistory() {
-        List<StudentBook> studentBookList = ComponentContainer.studentBookRepository.studentBookOnHand(ComponentContainer.currentProfile.getId(), null);
+        List<StudentBook> studentBookList = studentBookRepository.studentBookOnHand(currentProfile.getId(), null);
         for (StudentBook st : studentBookList) {
             String title = st.getBook().getTitle();
             String author = st.getBook().getAuthor();
@@ -95,7 +101,7 @@ public class StudentBookService {
     }
 
     public void booksOnHand() {
-        List<StudentBook> studentBookList = ComponentContainer.studentBookRepository.booksOnHand();
+        List<StudentBook> studentBookList = studentBookRepository.booksOnHand();
         for (StudentBook st : studentBookList) {
             Book book = st.getBook();
             Profile student = st.getStudent();
@@ -109,7 +115,7 @@ public class StudentBookService {
     }
 
     public void bookHistory(Integer bookId) {
-        List<StudentBook> studentBookList = ComponentContainer.studentBookRepository.bookHistory(bookId);
+        List<StudentBook> studentBookList = studentBookRepository.bookHistory(bookId);
         for (StudentBook st : studentBookList) {
             Profile student = st.getStudent();
 
@@ -120,7 +126,7 @@ public class StudentBookService {
     }
 
     public void bestBooks() {
-        List<StudentBook> studentBookList = ComponentContainer.studentBookRepository.bestBooks();
+        List<StudentBook> studentBookList = studentBookRepository.bestBooks();
         for (StudentBook st : studentBookList) {
             Book book = st.getBook();
             Category category = book.getCategory();
@@ -129,5 +135,13 @@ public class StudentBookService {
                     book.getAuthor(), category.getName(), st.getTakenCount());
             System.out.println(str);
         }
+    }
+
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public void setStudentBookRepository(StudentBookRepository studentBookRepository) {
+        this.studentBookRepository = studentBookRepository;
     }
 }
